@@ -26,8 +26,7 @@ jobs:
           --health-retries=5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -36,23 +35,14 @@ jobs:
           extensions: mbstring, pdo_mysql, bcmath, gd, zip, xml, curl
           coverage: none
 
-      - name: Copy .env for CI
-        run: cp .env.example .env
-
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      - name: Copy .env
+        run: cp .env.example .env
+
       - name: Generate application key
         run: php artisan key:generate
-
-      - name: Configure database
-        run: |
-          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
-          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env
-          sed -i 's/^DB_PORT=.*/DB_PORT=3306/' .env
-          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=todoapp_testing/' .env
-          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=root/' .env
-          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=root/' .env
 
       - name: Run migrations
         run: php artisan migrate --force
