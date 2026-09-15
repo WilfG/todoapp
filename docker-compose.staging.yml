@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wiltek-api-staging:latest
+    container_name: wiltek-api-staging
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:80"
+    environment:
+      APP_ENV: staging
+      APP_DEBUG: "true"
+      APP_URL: https://staging-api.wiltek-software.online
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: mysql
+      DB_HOST: host.docker.internal
+      DB_PORT: 3306
+      DB_DATABASE: wiltek_api_staging
+      DB_USERNAME: wiltek_api_staging
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./storage:/var/www/html/storage
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    mem_limit: 512m
+    cpus: 1.0
