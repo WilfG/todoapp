@@ -39,4 +39,27 @@ class TodoapiTest extends TestCase
             ->assertOk()
             ->assertJson(['status' => 'ok']);
     }
+
+    public function test_can_delete_completed_todos()
+    {
+        Todo::factory(3)->create(['completed' => true]);
+        Todo::factory(2)->create(['completed' => false]);
+
+        $this->deleteJson('/api/todos/completed')
+            ->assertOk()
+            ->assertJson(['deleted' => 3]);
+
+        // Il doit rester uniquement les 2 non terminés
+        $this->assertDatabaseCount('todos', 2);
+        $this->assertEquals(0, Todo::where('completed', true)->count());
+    }
+
+    public function test_delete_completed_returns_zero_when_none()
+    {
+        Todo::factory(2)->create(['completed' => false]);
+
+        $this->deleteJson('/api/todos/completed')
+            ->assertOk()
+            ->assertJson(['deleted' => 0]);
+    }
 }
