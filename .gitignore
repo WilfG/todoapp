@@ -19,3 +19,7 @@ yarn-error.log
 /.idea
 /.vscode
 githubsshkeu.pub
+
+# Docker env
+docker-compose.staging.env
+docker-compose.prod.env
