@@ -11,9 +11,19 @@ class TodoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Todo::all());
+        $query = Todo::query();
+
+        if ($request->has('completed')) {
+            $query->where('completed', $request->boolean('completed'));
+        }
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->input('search') . '%');
+        }
+
+        return response()->json($query->get());
     }
 
     /**
