@@ -39,4 +39,18 @@ class TodoapiTest extends TestCase
             ->assertOk()
             ->assertJson(['status' => 'ok']);
     }
+
+    public function test_stats_endpoint()
+    {
+        Todo::factory(3)->create(['completed' => true]);
+        Todo::factory(2)->create(['completed' => false]);
+
+        $this->getJson('/api/todos/stats')
+            ->assertOk()
+            ->assertJson([
+                'total' => 5,
+                'completed' => 3,
+                'pending' => 2,
+            ]);
+    }
 }

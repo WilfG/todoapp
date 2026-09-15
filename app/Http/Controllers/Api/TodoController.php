@@ -55,4 +55,15 @@ class TodoController extends Controller
         $todo->delete();
         return response()->json(null, 204);
     }
+
+    /**
+     * Display the statistics of todos.
+     */
+    public function stats(){
+        return response()->json([
+            'total' => Todo::count(),
+            'completed' => Todo::where('completed', true)->count(),
+            'pending' => Todo::where('completed', false)->count(),
+        ]);
+    }
 }
