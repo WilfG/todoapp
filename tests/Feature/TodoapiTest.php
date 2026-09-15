@@ -40,6 +40,31 @@ class TodoapiTest extends TestCase
             ->assertJson(['status' => 'ok']);
     }
 
+    public function test_can_filter_completed_todos()
+    {
+        Todo::factory(3)->create(['completed' => true]);
+        Todo::factory(2)->create(['completed' => false]);
+
+        $this->getJson('/api/todos?completed=true')
+            ->assertOk()
+            ->assertJsonCount(3);
+
+        $this->getJson('/api/todos?completed=false')
+            ->assertOk()
+            ->assertJsonCount(2);
+    }
+
+    public function test_can_search_todos_by_title()
+    {
+        Todo::factory()->create(['title' => 'Apprendre Laravel']);
+        Todo::factory()->create(['title' => 'Apprendre React Native']);
+        Todo::factory()->create(['title' => 'Dormir']);
+
+        $this->getJson('/api/todos?search=Apprendre')
+            ->assertOk()
+            ->assertJsonCount(2);
+    }
+
     public function test_stats_endpoint()
     {
         Todo::factory(3)->create(['completed' => true]);
