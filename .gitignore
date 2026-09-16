@@ -6,8 +6,9 @@
 /storage/*.key
 /vendor
 .env
-.env.backup
+.env.*
 .env.testing
+!.env.example
 .env.production
 .phpunit.result.cache
 Homestead.json
@@ -19,3 +20,7 @@ yarn-error.log
 /.idea
 /.vscode
 githubsshkeu.pub
+
+# Docker env
+docker-compose.staging.env
+docker-compose.prod.env

@@ -1,0 +1,34 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to staging-api.wiltek-software.online
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/staging_key
+          chmod 600 ~/.ssh/staging_key
+          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Execute deploy.sh on remote server
+        run: |
+          ssh -i ~/.ssh/staging_key \
+            ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} \
+            "cd /var/www/api.wiltek-software.online && ./deploy.sh"
+
+      - name: Verify API is up
+        run: |
+          sleep 3
+          curl -sf https://staging-api.wiltek-software.online/api/health \
+            || (echo "API health check failed" && exit 1)
