@@ -18,15 +18,7 @@ if [ ! -f docker-compose.staging.env ]; then
     exit 1
 fi
 
-echo "==> Création de l'arborescence storage..."
-mkdir -p storage/app/public \
-         storage/framework/cache/data \
-         storage/framework/sessions \
-         storage/framework/views \
-         storage/logs
-
-sudo /bin/chown -R 33:33 storage
-chmod -R 775 storage
+sudo /usr/local/bin/fix-storage-perms
 
 echo "==> Construction de la nouvelle image Docker..."
 docker compose -f docker-compose.staging.yml build --pull
