@@ -25,7 +25,7 @@ mkdir -p storage/app/public \
          storage/framework/views \
          storage/logs
 
-chown -R 33:33 storage
+sudo /bin/chown -R 33:33 storage
 chmod -R 775 storage
 
 echo "==> Construction de la nouvelle image Docker..."
