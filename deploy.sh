@@ -21,7 +21,7 @@ fi
 sudo /usr/local/bin/fix-storage-perms
 
 echo "==> Construction de la nouvelle image Docker..."
-docker compose -f docker-compose.staging.yml build --pull
+docker compose -f docker-compose.staging.yml --env-file docker-compose.staging.env build --pull
 
 echo "==> Redémarrage du conteneur..."
 docker compose -f docker-compose.staging.yml \
